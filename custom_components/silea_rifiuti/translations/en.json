@@ -1,0 +1,70 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Municipality",
+        "description": "Choose a municipality served by Silea.",
+        "data": {
+          "comune": "Municipality"
+        }
+      },
+      "via": {
+        "title": "Street",
+        "description": "Choose your street in {comune}: the collection calendar depends on the street.",
+        "data": {
+          "via": "Street"
+        }
+      }
+    },
+    "error": {
+      "no_calendar": "Silea publishes no calendar for this street. Choose another one."
+    },
+    "abort": {
+      "cannot_connect": "The Silea website is not responding. Try again later.",
+      "already_configured": "This street is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Options",
+        "data": {
+          "mesi": "Months to download"
+        },
+        "data_description": {
+          "mesi": "How many of the months published by Silea to download, starting from the current one."
+        }
+      }
+    }
+  },
+  "entity": {
+    "calendar": {
+      "raccolta": {
+        "name": "Calendar"
+      }
+    },
+    "sensor": {
+      "prossimo_ritiro": {
+        "name": "Next collection"
+      },
+      "da_esporre": {
+        "name": "Put out"
+      },
+      "prossimo_umido": {
+        "name": "Next organic"
+      },
+      "prossimo_carta": {
+        "name": "Next paper"
+      },
+      "prossimo_vetro": {
+        "name": "Next glass"
+      },
+      "prossimo_plastica": {
+        "name": "Next plastic"
+      },
+      "prossimo_indifferenziato": {
+        "name": "Next residual waste"
+      }
+    }
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Comune",
+        "description": "Scegli il comune servito da Silea.",
+        "data": {
+          "comune": "Comune"
+        }
+      },
+      "via": {
+        "title": "Via",
+        "description": "Scegli la via di casa a {comune}: il calendario della raccolta dipende dalla via.",
+        "data": {
+          "via": "Via"
+        }
+      }
+    },
+    "error": {
+      "no_calendar": "Per questa via il sito Silea non pubblica un calendario. Scegline un'altra."
+    },
+    "abort": {
+      "cannot_connect": "Il sito Silea non risponde. Riprova più tardi.",
+      "already_configured": "Questa via è già configurata."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opzioni",
+        "data": {
+          "mesi": "Mesi da scaricare"
+        },
+        "data_description": {
+          "mesi": "Quanti dei mesi pubblicati da Silea scaricare, a partire da quello in corso."
+        }
+      }
+    }
+  },
+  "entity": {
+    "calendar": {
+      "raccolta": {
+        "name": "Calendario"
+      }
+    },
+    "sensor": {
+      "prossimo_ritiro": {
+        "name": "Prossimo ritiro"
+      },
+      "da_esporre": {
+        "name": "Da esporre"
+      },
+      "prossimo_umido": {
+        "name": "Prossimo umido"
+      },
+      "prossimo_carta": {
+        "name": "Prossima carta"
+      },
+      "prossimo_vetro": {
+        "name": "Prossimo vetro"
+      },
+      "prossimo_plastica": {
+        "name": "Prossima plastica"
+      },
+      "prossimo_indifferenziato": {
+        "name": "Prossimo indifferenziato"
+      }
+    }
+  }
+}

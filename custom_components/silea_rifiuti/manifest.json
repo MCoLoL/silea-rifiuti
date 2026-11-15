@@ -1,0 +1,15 @@
+{
+  "domain": "silea_rifiuti",
+  "name": "Silea Raccolta Rifiuti",
+  "codeowners": [
+    "@MCoLoL"
+  ],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/MCoLoL/silea-rifiuti",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/MCoLoL/silea-rifiuti/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}
