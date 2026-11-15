@@ -46,11 +46,18 @@ I tipi sono `umido`, `carta`, `vetro`, `plastica`, `indifferenziato`.
 
 ## Installazione
 
-Con HACS:
+Da Home Assistant 2026.11 (Marketplace):
+
+1. *Impostazioni → Marketplace → Aggiungi da link*, incolla `https://github.com/MCoLoL/silea-rifiuti` (serve aver collegato un account GitHub al Marketplace).
+2. Installa **Silea Raccolta Rifiuti** e riavvia Home Assistant.
+3. *Impostazioni → Dispositivi e servizi → Aggiungi integrazione → Silea Raccolta Rifiuti*, poi scegli comune e via.
+
+Con HACS (Home Assistant 2026.10 e precedenti):
 
 1. HACS → menu ⋮ → *Repository personalizzati* → aggiungi `https://github.com/MCoLoL/silea-rifiuti`, categoria *Integrazione*.
-2. Installa **Silea Raccolta Rifiuti** e riavvia Home Assistant (serve la versione 2026.3 o successiva per vedere l'icona dell'integrazione).
-3. *Impostazioni → Dispositivi e servizi → Aggiungi integrazione → Silea Raccolta Rifiuti*, poi scegli comune e via.
+2. Installa **Silea Raccolta Rifiuti**, riavvia e aggiungi l'integrazione come sopra.
+
+L'icona dell'integrazione compare da Home Assistant 2026.3.
 
 A mano: copia `custom_components/silea_rifiuti` nella cartella `custom_components` di Home Assistant e riavvia.
 
