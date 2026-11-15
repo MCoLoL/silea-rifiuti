@@ -21,14 +21,23 @@ Per ogni via configurata:
 | `sensor.…_prossimo_ritiro` | Data del prossimo ritiro; negli attributi i tipi, i giorni mancanti e le note |
 | `sensor.…_da_esporre` | Cosa portare fuori: i ritiri di domani, o di oggi finché non sono conclusi. "Niente" se non c'è nulla |
 | `sensor.…_prossimo_umido`, `_carta`, `_vetro`, `_plastica`, `_indifferenziato` | Data del prossimo passaggio di ogni tipo |
+| `binary_sensor.…_centro_di_raccolta` | Centro di raccolta (ricicleria) del comune aperto o chiuso; negli attributi indirizzo, orario della settimana, orario di oggi, ora di chiusura e prossima apertura |
+| `sensor.…_prossima_apertura_centro_di_raccolta` | Quando apre la prossima volta il centro di raccolta |
 
 Un ritiro di oggi conta come passato dopo l'orario di fine indicato da Silea (di solito 13:30).
 I dati si aggiornano ogni 12 ore. Di default vengono scaricati 4 mesi; si cambia dalle opzioni dell'integrazione.
 
+Gli orari dei centri di raccolta vengono dalla pagina [Giorni e orari dei centri di raccolta](https://www.sileaspa.it/giorni-e-orari-centri-di-raccolta-comunali/):
+una sola richiesta al giorno, anche se hai configurato più vie. Lo stato passa da aperto a chiuso all'orario esatto.
+Alcuni centri hanno orari diversi per utenze domestiche e non domestiche: di default si usano quelli per le famiglie, si cambia dalle opzioni.
+Le entità del centro non vengono create se il comune non ha un centro di raccolta Silea (Erve, Morterone, Oliveto Lario, Pagnona, Premana).
+Per Sueglio e Valvarrone Silea indica un'apertura mensile senza dire in quali settimane: lo stato resta chiuso e l'attributo `nota` lo segnala.
+
 ## Scheda per la dashboard
 
 L'integrazione include una scheda, caricata in automatico: non serve aggiungere risorse.
-Mostra il prossimo ritiro (evidenziato la sera prima), il prossimo passaggio di ogni tipo e un calendario di 5 settimane.
+Mostra il prossimo ritiro (evidenziato la sera prima), il prossimo passaggio di ogni tipo, se il centro di raccolta è aperto con il suo orario
+e un calendario di 5 settimane.
 Usa i colori del tema, quindi funziona sia con il tema chiaro sia con quello scuro.
 
 ```yaml
@@ -38,6 +47,7 @@ weeks: 5                     # facoltativo
 names:                       # facoltativo: nomi personalizzati per tipo
   indifferenziato: Secco
   plastica: Plastica e lattine
+centro: false                # facoltativo: nasconde il centro di raccolta
 ```
 
 I tipi sono `umido`, `carta`, `vetro`, `plastica`, `indifferenziato`.

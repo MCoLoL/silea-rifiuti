@@ -29,15 +29,22 @@
       "init": {
         "title": "Opzioni",
         "data": {
-          "mesi": "Mesi da scaricare"
+          "mesi": "Mesi da scaricare",
+          "utenza": "Orari del centro di raccolta"
         },
         "data_description": {
-          "mesi": "Quanti dei mesi pubblicati da Silea scaricare, a partire da quello in corso."
+          "mesi": "Quanti dei mesi pubblicati da Silea scaricare, a partire da quello in corso.",
+          "utenza": "In alcuni centri di raccolta Silea pubblica orari diversi per utenze domestiche e non domestiche."
         }
       }
     }
   },
   "entity": {
+    "binary_sensor": {
+      "centro_aperto": {
+        "name": "Centro di raccolta"
+      }
+    },
     "calendar": {
       "raccolta": {
         "name": "Calendario"
@@ -64,6 +71,17 @@
       },
       "prossimo_indifferenziato": {
         "name": "Prossimo indifferenziato"
+      },
+      "centro_prossima_apertura": {
+        "name": "Prossima apertura centro di raccolta"
+      }
+    }
+  },
+  "selector": {
+    "utenza": {
+      "options": {
+        "domestica": "Utenze domestiche",
+        "non-domestica": "Utenze non domestiche"
       }
     }
   }

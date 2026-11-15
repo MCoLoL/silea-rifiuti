@@ -1,11 +1,12 @@
-// Silea Rifiuti Card: prossimo ritiro, prossimo passaggio per tipo e calendario di alcune settimane.
+// Silea Rifiuti Card: prossimo ritiro, prossimo passaggio per tipo, centro di raccolta e calendario di alcune settimane.
 // Viene caricata in automatico dall'integrazione silea_rifiuti.
 //
 // type: custom:silea-rifiuti-card
 // entity: calendar.raccolta_rifiuti_..._calendario   (obbligatorio)
 // weeks: 5                                           (settimane nel calendario)
 // names: {indifferenziato: Secco}                    (nomi personalizzati per tipo)
-const VERSION = '0.2.1';
+// centro: false                                      (nasconde il centro di raccolta; oppure l'entità binary_sensor da usare)
+const VERSION = '0.3.0';
 const TIPI = {
   umido: { n: 'Umido', i: 'mdi:food-apple-outline', c: '#c87734' },
   carta: { n: 'Carta', i: 'mdi:newspaper-variant-outline', c: '#2f9cc0' },
@@ -91,6 +92,13 @@ class SileaRifiutiCard extends HTMLElement {
       .leg{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:12px;font-weight:600;color:var(--secondary-text-color)}
       .leg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}
       .empty{font-size:14px;color:var(--secondary-text-color);padding:6px 0}
+      .cr{margin-bottom:10px}
+      .crh{display:flex;align-items:center;gap:12px}
+      .st{font-size:16px;font-weight:700;margin-top:2px}
+      .st.on{color:#3fa05c}
+      .ore{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:13px;color:var(--secondary-text-color)}
+      .og b{text-transform:capitalize;color:var(--primary-text-color);margin-right:2px}
+      .og.now{color:var(--primary-text-color);font-weight:600}
       @media (max-width:500px){.d{min-height:48px;padding:4px}.d .e{width:16px;height:16px}.d .e ha-icon{--mdc-icon-size:10px}}
     </style><div class="wrap"><div class="p empty">Carico il calendario…</div></div>`;
   }
@@ -123,6 +131,41 @@ class SileaRifiutiCard extends HTMLElement {
 
   _chip(c) { const t = this._tipi[c]; return `<span class="chip" style="background:${t.c}26"><span class="dot" style="background:${t.c}"><ha-icon icon="${t.i}"></ha-icon></span>${esc(t.n)}</span>`; }
   _ico(c, cls = 'dot') { const t = this._tipi[c]; return `<span class="${cls}" style="background:${t.c}" title="${esc(t.n)}"><ha-icon icon="${t.i}"></ha-icon></span>`; }
+
+  // Il binary_sensor del centro di raccolta: dal config, oppure quello dello stesso dispositivo del calendario.
+  _centroId() {
+    if (this._cfg.centro === false) return null;
+    if (typeof this._cfg.centro === 'string') return this._cfg.centro;
+    const reg = this._hass.entities || {};
+    const dev = reg[this._cfg.entity] && reg[this._cfg.entity].device_id;
+    if (!dev) return null;
+    const e = Object.values(reg).find((x) => x.device_id === dev && x.platform === 'silea_rifiuti' && x.entity_id.startsWith('binary_sensor.'));
+    return e ? e.entity_id : null;
+  }
+
+  _centro(now, label) {
+    const id = this._centroId();
+    const st = id && this._hass.states[id];
+    if (!st || st.state === 'unavailable' || st.state === 'unknown') return '';
+    const a = st.attributes;
+    const aperto = st.state === 'on';
+    const quando = (iso) => {
+      const d = new Date(iso), t0 = new Date(now); t0.setHours(0, 0, 0, 0);
+      const k = this._key(d), n = Math.round((new Date(d.getFullYear(), d.getMonth(), d.getDate()) - t0) / 86400000);
+      return `${n === 0 ? 'oggi' : n === 1 ? 'domani' : label(k).toLowerCase()} alle ${hhmm(d)}`;
+    };
+    const stato = aperto ? `Aperto · chiude alle ${hhmm(new Date(a.chiude_alle))}`
+      : a.prossima_apertura ? `Chiuso · apre ${quando(a.prossima_apertura)}` : 'Chiuso';
+    const oggi = WD[now.getDay()];
+    const giorni = Object.entries(a.orario || {}).filter(([, h]) => h !== 'chiuso');
+    const orario = giorni.length
+      ? giorni.map(([g, h]) => `<span class="og ${g === oggi ? 'now' : ''}"><b>${esc(g.slice(0, 3))}</b> ${esc(h.replace(/-/g, '–'))}</span>`).join('')
+      : `<span class="og">${esc(a.nota || 'Orario non disponibile')}</span>`;
+    return `<div class="p cr"><div class="crh"><span class="dot" style="background:${aperto ? '#3fa05c' : '#8b857c'}"><ha-icon icon="mdi:store-outline"></ha-icon></span>
+        <div><div class="h" style="margin:0">Centro di raccolta · ${esc(a.indirizzo || a.centro || '')}</div>
+        <div class="st ${aperto ? 'on' : ''}">${esc(stato)}</div></div></div>
+        <div class="ore">${orario}</div></div>`;
+  }
 
   _render() {
     const wrap = this.shadowRoot && this.shadowRoot.querySelector('.wrap');
@@ -173,13 +216,14 @@ class SileaRifiutiCard extends HTMLElement {
     const last = new Date(s); last.setDate(s.getDate() + 7 * this._cfg.weeks - 1);
     const titolo = s.getMonth() === last.getMonth() ? MOL[s.getMonth()] : `${MOL[s.getMonth()]} – ${MOL[last.getMonth()]}`;
     wrap.innerHTML = `<div class="row">${hero}<div class="p"><div class="h">Prossimo passaggio per tipo</div>${perTipo}</div></div>
+      ${this._centro(now, label)}
       <div class="p"><div class="h">Calendario · ${titolo}</div>
         <div class="cal">${['lun', 'mar', 'mer', 'gio', 'ven', 'sab', 'dom'].map((x) => `<div class="dn">${x}</div>`).join('')}${cells.join('')}</div>
         <div class="leg">${presenti.map((c) => `<span><i style="background:${T[c].c}"></i>${esc(T[c].n)}</span>`).join('')}</div>
       </div>`;
   }
 
-  getCardSize() { return 12; }
+  getCardSize() { return 14; }
   getGridOptions() { return { columns: 'full', rows: 'auto' }; }
 }
 

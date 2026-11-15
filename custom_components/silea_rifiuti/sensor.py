@@ -1,8 +1,8 @@
-"""Sensori: prossimo ritiro, cosa esporre stasera e prossimo passaggio per ogni tipo."""
+"""Sensori: prossimo ritiro, cosa esporre stasera, prossimo passaggio per ogni tipo e prossima apertura del centro di raccolta."""
 
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, datetime
 from typing import Any
 
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
@@ -13,7 +13,7 @@ from homeassistant.util import dt as dt_util
 from . import SileaConfigEntry
 from .const import TIPI
 from .coordinator import Ritiro, SileaCoordinator
-from .entity import SileaEntity
+from .entity import CentroEntity, SileaEntity, aggiungi_centro
 
 
 async def async_setup_entry(
@@ -27,6 +27,7 @@ async def async_setup_entry(
     ]
     entities += [ProssimoPerTipo(coordinator, t) for t in tipi]
     async_add_entities(entities)
+    aggiungi_centro(coordinator, async_add_entities, lambda: [CentroProssimaApertura(coordinator)])
 
 
 def _giorni(d: date) -> int:
@@ -126,3 +127,28 @@ class ProssimoPerTipo(SileaEntity, SensorEntity):
     def extra_state_attributes(self) -> dict[str, Any]:
         r = self._prossimo()
         return {"giorni": _giorni(r.giorno), "note": r.note} if r else {}
+
+
+class CentroProssimaApertura(CentroEntity, SensorEntity):
+    """Quando apre la prossima volta il centro di raccolta (dopo l'apertura in corso, se è aperto)."""
+
+    _attr_translation_key = "centro_prossima_apertura"
+    _attr_device_class = SensorDeviceClass.TIMESTAMP
+    _attr_icon = "mdi:store-clock-outline"
+
+    def __init__(self, coordinator: SileaCoordinator) -> None:
+        super().__init__(coordinator, "centro_prossima_apertura")
+
+    @property
+    def native_value(self) -> datetime | None:
+        c = self.centro
+        p = c.prossima(dt_util.now()) if c else None
+        return p[0] if p else None
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        c = self.centro
+        p = c.prossima(dt_util.now()) if c else None
+        if not p:
+            return {"centro": c.nome} if c else {}
+        return {"centro": c.nome, "fine": p[1].isoformat(), "giorni": _giorni(p[0].date())}

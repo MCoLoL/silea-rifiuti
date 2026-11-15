@@ -3,7 +3,7 @@
 from datetime import timedelta
 
 DOMAIN = "silea_rifiuti"
-VERSION = "0.2.1"
+VERSION = "0.3.0"
 REPO_URL = "https://github.com/MCoLoL/silea-rifiuti"
 
 # Si presenta in modo riconoscibile, così Silea sa chi fa le richieste e dove trovare il progetto.
@@ -17,11 +17,16 @@ CONF_COMUNE_NOME = "comune_nome"
 CONF_VIA = "via"
 CONF_VIA_NOME = "via_nome"
 CONF_MESI = "mesi"
+CONF_UTENZA = "utenza"
 
 DEFAULT_MESI = 4
 UPDATE_INTERVAL = timedelta(hours=12)
 # Ogni installazione aggiorna con uno scarto fisso tra 0 e 59 minuti, per non arrivare tutte insieme.
 MAX_OFFSET_MINUTES = 60
+# Gli orari dei centri di raccolta cambiano di rado: basta una volta al giorno, per tutte le vie configurate.
+CENTRI_INTERVAL = timedelta(hours=24)
+CENTRI_RETRY = timedelta(minutes=30)
+CENTRI_URL = "https://www.sileaspa.it/giorni-e-orari-centri-di-raccolta-comunali/"
 
 AJAX_URL = "https://www.sileaspa.it/wp-admin/admin-ajax.php"
 REFERER = "https://www.sileaspa.it/calendario-raccolta-rifiuti/"

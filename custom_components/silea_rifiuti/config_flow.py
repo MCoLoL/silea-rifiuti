@@ -20,10 +20,12 @@ from homeassistant.helpers.selector import (
 )
 
 from .api import SileaApi, SileaError
+from .centri import DEFAULT_UTENZA, UTENZE
 from .const import (
     CONF_COMUNE,
     CONF_COMUNE_NOME,
     CONF_MESI,
+    CONF_UTENZA,
     CONF_VIA,
     CONF_VIA_NOME,
     DEFAULT_MESI,
@@ -116,15 +118,25 @@ class SileaConfigFlow(ConfigFlow, domain=DOMAIN):
 class SileaOptionsFlow(OptionsFlow):
     async def async_step_init(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         if user_input is not None:
-            return self.async_create_entry(data={CONF_MESI: int(user_input[CONF_MESI])})
+            return self.async_create_entry(
+                data={CONF_MESI: int(user_input[CONF_MESI]), CONF_UTENZA: user_input[CONF_UTENZA]}
+            )
         attuale = self.config_entry.options.get(CONF_MESI, DEFAULT_MESI)
+        utenza = self.config_entry.options.get(CONF_UTENZA, DEFAULT_UTENZA)
         return self.async_show_form(
             step_id="init",
             data_schema=vol.Schema(
                 {
                     vol.Required(CONF_MESI, default=attuale): NumberSelector(
                         NumberSelectorConfig(min=1, max=12, step=1, mode=NumberSelectorMode.BOX)
-                    )
+                    ),
+                    vol.Required(CONF_UTENZA, default=utenza): SelectSelector(
+                        SelectSelectorConfig(
+                            options=list(UTENZE),
+                            mode=SelectSelectorMode.LIST,
+                            translation_key=CONF_UTENZA,
+                        )
+                    ),
                 }
             ),
         )

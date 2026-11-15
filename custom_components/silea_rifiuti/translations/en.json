@@ -29,15 +29,22 @@
       "init": {
         "title": "Options",
         "data": {
-          "mesi": "Months to download"
+          "mesi": "Months to download",
+          "utenza": "Collection centre opening hours"
         },
         "data_description": {
-          "mesi": "How many of the months published by Silea to download, starting from the current one."
+          "mesi": "How many of the months published by Silea to download, starting from the current one.",
+          "utenza": "Silea publishes different hours for households and businesses at some collection centres."
         }
       }
     }
   },
   "entity": {
+    "binary_sensor": {
+      "centro_aperto": {
+        "name": "Collection centre"
+      }
+    },
     "calendar": {
       "raccolta": {
         "name": "Calendar"
@@ -64,6 +71,17 @@
       },
       "prossimo_indifferenziato": {
         "name": "Next residual waste"
+      },
+      "centro_prossima_apertura": {
+        "name": "Collection centre next opening"
+      }
+    }
+  },
+  "selector": {
+    "utenza": {
+      "options": {
+        "domestica": "Households",
+        "non-domestica": "Businesses"
       }
     }
   }

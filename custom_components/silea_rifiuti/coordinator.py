@@ -1,8 +1,10 @@
-"""Coordinator: scarica i mesi pubblicati e li trasforma in ritiri."""
+"""Coordinator: scarica i mesi pubblicati e li trasforma in ritiri; un secondo coordinator, condiviso, scarica i centri di raccolta."""
 
 from __future__ import annotations
 
+import asyncio
 from dataclasses import dataclass
+from typing import Any
 from datetime import date, datetime, time, timedelta
 import hashlib
 import logging
@@ -15,6 +17,8 @@ from homeassistant.util import dt as dt_util
 
 from .api import SileaApi, SileaError
 from .const import (
+    CENTRI_INTERVAL,
+    CENTRI_RETRY,
     CONF_COMUNE,
     CONF_MESI,
     CONF_VIA,
@@ -103,6 +107,7 @@ class SileaCoordinator(DataUpdateCoordinator[list[Ritiro]]):
         self.api = SileaApi(async_get_clientsession(hass))
         self.comune = entry.data[CONF_COMUNE]
         self.via = entry.data[CONF_VIA]
+        self.centri: CentriCoordinator | None = None
 
     async def _async_update_data(self) -> list[Ritiro]:
         n_mesi = int(self.config_entry.options.get(CONF_MESI, DEFAULT_MESI))
@@ -122,3 +127,36 @@ class SileaCoordinator(DataUpdateCoordinator[list[Ritiro]]):
         """Ritiri non ancora conclusi (quelli di oggi contano fino all'ora di fine)."""
         adesso = adesso or dt_util.now()
         return [r for r in self.data or [] if r.fine > adesso]
+
+
+class CentriCoordinator(DataUpdateCoordinator[list[dict[str, Any]]]):
+    """Orari dei centri di raccolta: una sola richiesta al giorno, condivisa da tutte le vie configurate."""
+
+    def __init__(self, hass: HomeAssistant) -> None:
+        super().__init__(
+            hass,
+            _LOGGER,
+            name=f"{DOMAIN}_centri",
+            update_interval=CENTRI_INTERVAL,
+            config_entry=None,
+        )
+        self.api = SileaApi(async_get_clientsession(hass))
+        self._lock = asyncio.Lock()
+
+    async def primo_aggiornamento(self) -> None:
+        """Scarica i dati se non ci sono ancora; un errore non blocca il calendario della raccolta."""
+        async with self._lock:
+            if self.data is None:
+                await self.async_refresh()
+
+    async def _async_update_data(self) -> list[dict[str, Any]]:
+        try:
+            dati = await self.api.centri()
+            if not dati:
+                raise UpdateFailed("Il sito Silea non ha restituito centri di raccolta")
+        except (SileaError, UpdateFailed) as err:
+            # Senza dati si riprova presto; con dati vecchi si tengono quelli fino al giorno dopo.
+            self.update_interval = CENTRI_INTERVAL if self.data else CENTRI_RETRY
+            raise UpdateFailed(f"Centri di raccolta non disponibili: {err}") from err
+        self.update_interval = CENTRI_INTERVAL
+        return dati

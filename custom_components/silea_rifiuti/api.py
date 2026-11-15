@@ -22,7 +22,7 @@ class SileaError(Exception):
 
 
 class SileaApi:
-    """Chiamate al sito: comuni, vie, mesi disponibili e calendario di un mese."""
+    """Chiamate al sito: comuni, vie, mesi disponibili, calendario di un mese e centri di raccolta."""
 
     def __init__(self, session: aiohttp.ClientSession) -> None:
         self._session = session
@@ -57,3 +57,8 @@ class SileaApi:
             {"action": "get_calendar", "id_cliente": comune, "id_via": via, "id_mese": mese}
         )
         return res if isinstance(res, list) else []
+
+    async def centri(self) -> list[dict[str, Any]]:
+        """Centri di raccolta con indirizzo, comuni serviti e orari, nel formato del sito."""
+        res = await self._post({"action": "get_calendario_centri_raccolta_data"})
+        return [c for c in res if isinstance(c, dict)] if isinstance(res, list) else []
