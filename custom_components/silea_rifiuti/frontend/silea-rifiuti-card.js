@@ -5,7 +5,7 @@
 // entity: calendar.raccolta_rifiuti_..._calendario   (obbligatorio)
 // weeks: 5                                           (settimane nel calendario)
 // names: {indifferenziato: Secco}                    (nomi personalizzati per tipo)
-const VERSION = '0.2.0';
+const VERSION = '0.2.1';
 const TIPI = {
   umido: { n: 'Umido', i: 'mdi:food-apple-outline', c: '#c87734' },
   carta: { n: 'Carta', i: 'mdi:newspaper-variant-outline', c: '#2f9cc0' },

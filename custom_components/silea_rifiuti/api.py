@@ -7,10 +7,10 @@ from typing import Any
 
 import aiohttp
 
-from .const import AJAX_URL, REFERER
+from .const import AJAX_URL, REFERER, USER_AGENT
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Home Assistant; silea_rifiuti)",
+    "User-Agent": USER_AGENT,
     "Accept": "application/json, text/javascript, */*; q=0.01",
     "X-Requested-With": "XMLHttpRequest",
     "Referer": REFERER,

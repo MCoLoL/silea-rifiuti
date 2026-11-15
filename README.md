@@ -5,6 +5,10 @@ Integrazione per Home Assistant che legge il calendario della raccolta porta a p
 
 Non è un'integrazione ufficiale di Silea: usa gli stessi dati della pagina "Calendario raccolta rifiuti" del sito.
 
+**Uso corretto del sito Silea.** L'integrazione fa le stesse richieste della pagina del calendario, solo per la via configurata,
+ogni 12 ore circa (con uno scarto diverso per ogni installazione), e si presenta con uno User-Agent che rimanda a questo repository.
+Se Silea chiede di modificarla o di toglierla, verrà fatto: per segnalazioni apri una [issue](https://github.com/MCoLoL/silea-rifiuti/issues).
+
 ![Scheda Silea Rifiuti](https://raw.githubusercontent.com/MCoLoL/silea-rifiuti/main/docs/scheda.png)
 
 ## Cosa crea

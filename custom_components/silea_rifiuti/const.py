@@ -3,6 +3,11 @@
 from datetime import timedelta
 
 DOMAIN = "silea_rifiuti"
+VERSION = "0.2.1"
+REPO_URL = "https://github.com/MCoLoL/silea-rifiuti"
+
+# Si presenta in modo riconoscibile, così Silea sa chi fa le richieste e dove trovare il progetto.
+USER_AGENT = f"HomeAssistant-SileaRifiuti/{VERSION} (+{REPO_URL})"
 
 CARD_FILE = "silea-rifiuti-card.js"
 CARD_URL = f"/{DOMAIN}/{CARD_FILE}"
@@ -15,6 +20,8 @@ CONF_MESI = "mesi"
 
 DEFAULT_MESI = 4
 UPDATE_INTERVAL = timedelta(hours=12)
+# Ogni installazione aggiorna con uno scarto fisso tra 0 e 59 minuti, per non arrivare tutte insieme.
+MAX_OFFSET_MINUTES = 60
 
 AJAX_URL = "https://www.sileaspa.it/wp-admin/admin-ajax.php"
 REFERER = "https://www.sileaspa.it/calendario-raccolta-rifiuti/"

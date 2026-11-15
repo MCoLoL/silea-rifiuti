@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import date, datetime, time
+from datetime import date, datetime, time, timedelta
+import hashlib
 import logging
 
 from homeassistant.config_entries import ConfigEntry
@@ -21,6 +22,7 @@ from .const import (
     DEFAULT_MESI,
     DEFAULT_START,
     DOMAIN,
+    MAX_OFFSET_MINUTES,
     TIPI,
     UPDATE_INTERVAL,
     tipo_da_servizio,
@@ -43,6 +45,12 @@ class Ritiro:
     @property
     def nome(self) -> str:
         return TIPI.get(self.tipo, (self.servizio.capitalize(), ""))[0]
+
+
+def _intervallo(entry_id: str) -> timedelta:
+    """12 ore più uno scarto stabile ricavato dalla config entry."""
+    scarto = int(hashlib.sha256(entry_id.encode()).hexdigest(), 16) % MAX_OFFSET_MINUTES
+    return UPDATE_INTERVAL + timedelta(minutes=scarto)
 
 
 def _ora(testo: str, default: str) -> time:
@@ -90,7 +98,7 @@ class SileaCoordinator(DataUpdateCoordinator[list[Ritiro]]):
 
     def __init__(self, hass: HomeAssistant, entry: ConfigEntry) -> None:
         super().__init__(
-            hass, _LOGGER, name=DOMAIN, update_interval=UPDATE_INTERVAL, config_entry=entry
+            hass, _LOGGER, name=DOMAIN, update_interval=_intervallo(entry.entry_id), config_entry=entry
         )
         self.api = SileaApi(async_get_clientsession(hass))
         self.comune = entry.data[CONF_COMUNE]
