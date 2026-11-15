@@ -9,7 +9,7 @@ Non è un'integrazione ufficiale di Silea: usa gli stessi dati della pagina "Cal
 ogni 12 ore circa (con uno scarto diverso per ogni installazione), e si presenta con uno User-Agent che rimanda a questo repository.
 Se Silea chiede di modificarla o di toglierla, verrà fatto: per segnalazioni apri una [issue](https://github.com/MCoLoL/silea-rifiuti/issues).
 
-![Scheda Silea Rifiuti](https://raw.githubusercontent.com/MCoLoL/silea-rifiuti/main/docs/scheda.png)
+![Scheda Silea Rifiuti](https://raw.githubusercontent.com/MCoLoL/silea-rifiuti/main/docs/scheda.png?v=0.3.1b)
 
 ## Cosa crea
 
@@ -54,7 +54,7 @@ I tipi sono `umido`, `carta`, `vetro`, `plastica`, `indifferenziato`.
 
 <details><summary>Tema scuro</summary>
 
-![Scheda Silea Rifiuti, tema scuro](https://raw.githubusercontent.com/MCoLoL/silea-rifiuti/main/docs/scheda-scura.png)
+![Scheda Silea Rifiuti, tema scuro](https://raw.githubusercontent.com/MCoLoL/silea-rifiuti/main/docs/scheda-scura.png?v=0.3.1b)
 
 </details>
 

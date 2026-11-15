@@ -6,7 +6,7 @@
 // weeks: 5                                           (settimane nel calendario)
 // names: {indifferenziato: Secco}                    (nomi personalizzati per tipo)
 // centro: false                                      (nasconde il centro di raccolta; oppure l'entità binary_sensor da usare)
-const VERSION = '0.3.0';
+const VERSION = '0.3.1';
 const TIPI = {
   umido: { n: 'Umido', i: 'mdi:food-apple-outline', c: '#c87734' },
   carta: { n: 'Carta', i: 'mdi:newspaper-variant-outline', c: '#2f9cc0' },
@@ -156,13 +156,15 @@ class SileaRifiutiCard extends HTMLElement {
     };
     const stato = aperto ? `Aperto · chiude alle ${hhmm(new Date(a.chiude_alle))}`
       : a.prossima_apertura ? `Chiuso · apre ${quando(a.prossima_apertura)}` : 'Chiuso';
+    // "Utenze domestiche (famiglie)" → "orari famiglie"; niente se gli orari valgono per tutti.
+    const chi = (String(a.utenza || '').match(/\(([^)]+)\)/) || [])[1];
     const oggi = WD[now.getDay()];
     const giorni = Object.entries(a.orario || {}).filter(([, h]) => h !== 'chiuso');
     const orario = giorni.length
       ? giorni.map(([g, h]) => `<span class="og ${g === oggi ? 'now' : ''}"><b>${esc(g.slice(0, 3))}</b> ${esc(h.replace(/-/g, '–'))}</span>`).join('')
       : `<span class="og">${esc(a.nota || 'Orario non disponibile')}</span>`;
     return `<div class="p cr"><div class="crh"><span class="dot" style="background:${aperto ? '#3fa05c' : '#8b857c'}"><ha-icon icon="mdi:store-outline"></ha-icon></span>
-        <div><div class="h" style="margin:0">Centro di raccolta · ${esc(a.indirizzo || a.centro || '')}</div>
+        <div><div class="h" style="margin:0">Centro di raccolta · ${esc(a.indirizzo || a.centro || '')}${chi ? ` · orari ${esc(chi)}` : ''}</div>
         <div class="st ${aperto ? 'on' : ''}">${esc(stato)}</div></div></div>
         <div class="ore">${orario}</div></div>`;
   }

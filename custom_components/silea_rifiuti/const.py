@@ -3,7 +3,7 @@
 from datetime import timedelta
 
 DOMAIN = "silea_rifiuti"
-VERSION = "0.3.0"
+VERSION = "0.3.1"
 REPO_URL = "https://github.com/MCoLoL/silea-rifiuti"
 
 # Si presenta in modo riconoscibile, così Silea sa chi fa le richieste e dove trovare il progetto.
