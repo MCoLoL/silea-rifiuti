@@ -4,6 +4,9 @@ from datetime import timedelta
 
 DOMAIN = "silea_rifiuti"
 
+CARD_FILE = "silea-rifiuti-card.js"
+CARD_URL = f"/{DOMAIN}/{CARD_FILE}"
+
 CONF_COMUNE = "comune"
 CONF_COMUNE_NOME = "comune_nome"
 CONF_VIA = "via"

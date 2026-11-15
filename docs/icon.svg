@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="body" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2f8a7a"/><stop offset="1" stop-color="#3fa05c"/>
+    </linearGradient>
+  </defs>
+  <!-- tile -->
+  <rect x="8" y="8" width="240" height="240" rx="56" fill="#f6f2ea"/>
+  <rect x="8.5" y="8.5" width="239" height="239" rx="55.5" fill="none" stroke="#e2d9ca" stroke-width="1"/>
+  <!-- shadow -->
+  <ellipse cx="128" cy="214" rx="62" ry="8" fill="#2b2722" opacity=".12"/>
+  <!-- lid handle -->
+  <rect x="104" y="46" width="48" height="22" rx="11" fill="none" stroke="#24636f" stroke-width="10"/>
+  <!-- lid -->
+  <rect x="58" y="62" width="140" height="24" rx="12" fill="#24636f"/>
+  <!-- body -->
+  <path d="M70 94 H186 L176 196 Q174.5 210 160 210 H96 Q81.5 210 80 196 Z" fill="url(#body)"/>
+  <!-- ribs -->
+  <rect x="98" y="110" width="10" height="80" rx="5" fill="#f6f2ea" opacity=".85"/>
+  <rect x="123" y="110" width="10" height="80" rx="5" fill="#f6f2ea" opacity=".85"/>
+  <rect x="148" y="110" width="10" height="80" rx="5" fill="#f6f2ea" opacity=".85"/>
+  <!-- leaf badge -->
+  <circle cx="186" cy="184" r="30" fill="#f6f2ea"/>
+  <circle cx="186" cy="184" r="24" fill="#c87734"/>
+  <path d="M174 196 C174 178 184 168 200 168 C200 186 190 196 174 196 Z" fill="#f6f2ea"/>
+  <path d="M176 194 L194 174" stroke="#c87734" stroke-width="3" stroke-linecap="round"/>
+</svg>

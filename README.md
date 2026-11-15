@@ -5,6 +5,8 @@ Integrazione per Home Assistant che legge il calendario della raccolta porta a p
 
 Non è un'integrazione ufficiale di Silea: usa gli stessi dati della pagina "Calendario raccolta rifiuti" del sito.
 
+![Scheda Silea Rifiuti](https://raw.githubusercontent.com/MCoLoL/silea-rifiuti/main/docs/scheda.png)
+
 ## Cosa crea
 
 Per ogni via configurata:
@@ -19,12 +21,35 @@ Per ogni via configurata:
 Un ritiro di oggi conta come passato dopo l'orario di fine indicato da Silea (di solito 13:30).
 I dati si aggiornano ogni 12 ore. Di default vengono scaricati 4 mesi; si cambia dalle opzioni dell'integrazione.
 
+## Scheda per la dashboard
+
+L'integrazione include una scheda, caricata in automatico: non serve aggiungere risorse.
+Mostra il prossimo ritiro (evidenziato la sera prima), il prossimo passaggio di ogni tipo e un calendario di 5 settimane.
+Usa i colori del tema, quindi funziona sia con il tema chiaro sia con quello scuro.
+
+```yaml
+type: custom:silea-rifiuti-card
+entity: calendar.raccolta_rifiuti_via_esempio_calendario
+weeks: 5                     # facoltativo
+names:                       # facoltativo: nomi personalizzati per tipo
+  indifferenziato: Secco
+  plastica: Plastica e lattine
+```
+
+I tipi sono `umido`, `carta`, `vetro`, `plastica`, `indifferenziato`.
+
+<details><summary>Tema scuro</summary>
+
+![Scheda Silea Rifiuti, tema scuro](https://raw.githubusercontent.com/MCoLoL/silea-rifiuti/main/docs/scheda-scura.png)
+
+</details>
+
 ## Installazione
 
 Con HACS:
 
 1. HACS → menu ⋮ → *Repository personalizzati* → aggiungi `https://github.com/MCoLoL/silea-rifiuti`, categoria *Integrazione*.
-2. Installa **Silea Raccolta Rifiuti** e riavvia Home Assistant.
+2. Installa **Silea Raccolta Rifiuti** e riavvia Home Assistant (serve la versione 2026.3 o successiva per vedere l'icona dell'integrazione).
 3. *Impostazioni → Dispositivi e servizi → Aggiungi integrazione → Silea Raccolta Rifiuti*, poi scegli comune e via.
 
 A mano: copia `custom_components/silea_rifiuti` nella cartella `custom_components` di Home Assistant e riavvia.
